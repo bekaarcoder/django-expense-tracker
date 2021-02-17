@@ -1,9 +1,47 @@
-{% extends "base_auth.html" %}
+{% extends "base_auth.html" %} 
+
+{% load static %}
 
 {% block content %}
-  <div class="card">
-    <div class="card-body">
-      <h2>Register</h2>
-    </div>
+<div class="card">
+  <div class="card-body">
+    <h2 class="card-title">Create an account</h2>
+    <form action="" method="POST">
+      <div class="mb-3">
+        <label for="" class="form-label">Username</label>
+        <input
+          type="text"
+          name="username"
+          placeholder="Enter username"
+          id="usernameField"
+          class="form-control"
+        />
+        <div class="invalid-feedback d-none" id="username-feedback"></div>
+      </div>
+      <div class="mb-3">
+        <label for="" class="form-label">Email Address</label>
+        <input
+          type="email"
+          name="email"
+          placeholder="Enter email address"
+          id="emailField"
+          class="form-control"
+        />
+        <div class="invalid-feedback d-none" id="email-feedback"></div>
+      </div>
+      <div class="mb-3">
+        <label for="" class="form-label">Password</label>
+        <input
+          type="password"
+          name="password"
+          placeholder="Enter password"
+          id="passwordField"
+          class="form-control"
+        />
+        <div class="d-flex justify-content-end form-text">SHOW</div>
+      </div>
+      <input type="submit" value="Register" class="btn btn-success" />
+    </form>
   </div>
+</div>
 {% endblock content %}
