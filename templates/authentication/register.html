@@ -17,6 +17,7 @@
           placeholder="Enter username"
           id="usernameField"
           class="form-control"
+          value="{{username}}"
         />
         <div class="invalid-feedback d-none" id="username-feedback"></div>
       </div>
@@ -28,6 +29,7 @@
           placeholder="Enter email address"
           id="emailField"
           class="form-control"
+          value="{{email}}"
         />
         <div class="invalid-feedback d-none" id="email-feedback"></div>
       </div>
@@ -42,7 +44,7 @@
         />
         <div class="d-flex justify-content-end form-text text-primary small" id="showPasswordToggle">SHOW</div>
       </div>
-      <input type="submit" value="Register" class="btn btn-success" />
+      <input type="submit" value="Register" class="btn btn-success" id="registerBtn" />
     </form>
   </div>
 </div>

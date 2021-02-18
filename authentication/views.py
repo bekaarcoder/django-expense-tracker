@@ -42,8 +42,28 @@ class RegistrationView(View):
     return render(request, 'authentication/register.html')
 
   def post(self, request):
-    messages.success(request, 'Success Message')
-    messages.error(request, 'Error Message')
-    messages.info(request, 'Info Message')
-    messages.warning(request, 'Warning Message')
+    # get user data
+    username = request.POST['username']
+    email = request.POST['email']
+    password = request.POST['password']
+
+    context = {
+      'username': username,
+      'email': email
+    }
+
+    # validate data
+    if not User.objects.filter(username=username).exists():
+      if not User.objects.filter(email=email).exists():
+        if len(password) < 6:
+          messages.error(request, 'Password too short')
+          return render(request, 'authentication/register.html', context)
+
+        # register user
+        user = User.objects.create_user(username=username, email=email)
+        user.set_password(password)
+        user.save()
+        messages.success(request, "Account created successfully")
+        return render(request, 'authentication/register.html')
+
     return render(request, 'authentication/register.html')

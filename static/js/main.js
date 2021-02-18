@@ -1,5 +1,15 @@
-console.log("Application Loading...");
+let usernameErr = false;
+let emailErr = false;
 
+const handleRegisterButtonDisable = () => {
+  if (!usernameErr && !emailErr) {
+    registerBtn.removeAttribute("disabled");
+  } else {
+    registerBtn.disabled = true;
+  }
+};
+
+const registerBtn = document.querySelector("#registerBtn");
 const usernameField = document.querySelector("#usernameField");
 const feedbackField = document.querySelector("#username-feedback");
 
@@ -15,9 +25,13 @@ usernameField.addEventListener("keyup", (e) => {
           usernameField.classList.add("is-invalid");
           feedbackField.classList.remove("d-none");
           feedbackField.innerHTML = `<p>${data.username_error}</p>`;
+          usernameErr = true;
+          handleRegisterButtonDisable();
         } else {
           feedbackField.classList.add("d-none");
           usernameField.classList.remove("is-invalid");
+          usernameErr = false;
+          handleRegisterButtonDisable();
         }
       })
       .catch((error) => console.log(error));
@@ -39,9 +53,13 @@ emailField.addEventListener("keyup", (e) => {
           emailField.classList.add("is-invalid");
           emailFeedbackField.classList.remove("d-none");
           emailFeedbackField.innerHTML = `<p>${data.email_error}</p>`;
+          emailErr = true;
+          handleRegisterButtonDisable();
         } else {
           emailFeedbackField.classList.add("d-none");
           emailField.classList.remove("is-invalid");
+          emailErr = false;
+          handleRegisterButtonDisable();
         }
       })
       .catch((error) => console.log(error));
