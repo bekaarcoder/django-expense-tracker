@@ -47,3 +47,16 @@ emailField.addEventListener("keyup", (e) => {
       .catch((error) => console.log(error));
   }
 });
+
+const showPasswordToggle = document.querySelector("#showPasswordToggle");
+const passwordField = document.querySelector("#passwordField");
+
+showPasswordToggle.addEventListener("click", (e) => {
+  if (passwordField.getAttribute("type") === "password") {
+    passwordField.setAttribute("type", "text");
+    showPasswordToggle.textContent = "HIDE";
+  } else {
+    passwordField.setAttribute("type", "password");
+    showPasswordToggle.textContent = "SHOW";
+  }
+});

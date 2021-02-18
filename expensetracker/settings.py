@@ -1,5 +1,6 @@
 import environ
 from pathlib import Path
+from django.contrib import messages
 
 env = environ.Env()
 # Read .env file
@@ -117,3 +118,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = 'static_root'
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger'
+}

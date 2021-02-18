@@ -6,7 +6,9 @@
 <div class="card">
   <div class="card-body">
     <h2 class="card-title">Create an account</h2>
-    <form action="" method="POST">
+    {% include "partials/_messages.html" %}
+    <form action="{% url 'authentication:register' %}" method="POST">
+      {% csrf_token %}
       <div class="mb-3">
         <label for="" class="form-label">Username</label>
         <input
@@ -38,7 +40,7 @@
           id="passwordField"
           class="form-control"
         />
-        <div class="d-flex justify-content-end form-text">SHOW</div>
+        <div class="d-flex justify-content-end form-text text-primary small" id="showPasswordToggle">SHOW</div>
       </div>
       <input type="submit" value="Register" class="btn btn-success" />
     </form>
