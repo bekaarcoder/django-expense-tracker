@@ -7,7 +7,7 @@ from validate_email import validate_email
 from django.contrib import messages
 from django.core.mail import EmailMessage, send_mail
 from django.urls import reverse
-
+from django.contrib import auth
 from django.utils.encoding import force_bytes, force_text, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.contrib.sites.shortcuts import get_current_site
@@ -109,10 +109,39 @@ class VerificationView(View):
 
     except Exception as e:
       pass
-    
+
     return redirect('authentication:login')
 
 
 class LoginView(View):
   def get(self, request):
     return render(request, 'authentication/login.html')
+
+  def post(self, request):
+    username = request.POST['username']
+    password = request.POST['password']
+
+    if username and password:
+      user = auth.authenticate(username=username, password=password)
+
+      if user:
+
+        if user.is_active:
+          auth.login(request, user)
+          return redirect('/')
+
+        messages.error(request, 'Account not active. Please check your mail to activate your account.')
+        return render(request, 'authentication/login.html')
+
+      messages.error(request, 'Invalid credentials. Please check your username/password.')
+      return render(request, 'authentication/login.html')
+
+    messages.error(request, 'Please enter your username/password.')
+    return render(request, 'authentication/login.html')
+
+
+class LogoutView(View):
+  def get(self, request):
+    auth.logout(request)
+    messages.success(request, 'You are successfully logged out.')
+    return redirect('authentication:login')
