@@ -14,4 +14,33 @@
       <a href="{% url 'expenses:add-expense' %}" class="btn btn-outline-success btn-sm ms-auto">Add Expense</a>
     </div>
   </div>
+  <div class="row">
+    <div class="col-md-12">
+      <h3 class="display-6">My Expenses</h3>
+    </div>
+    {% if expenses.count %}
+      <div class="col-md-12">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Description</th>
+              <th scope="col">Category</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for expense in expenses %}
+              <tr>
+                <td>{{expense.date}}</td>
+                <td>{{expense.amount}}</td>
+                <td>{{expense.description}}</td>
+                <td>{{expense.category}}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% endif %}
+  </div>
 {% endblock content %}
