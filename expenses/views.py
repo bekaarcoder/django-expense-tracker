@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.core.paginator import Paginator
 from .models import Category, Expense
 import datetime
 
@@ -8,8 +9,12 @@ import datetime
 @login_required(login_url='/auth/login')
 def index(request):
   expenses = Expense.objects.filter(owner=request.user).order_by('-date')
+  paginator = Paginator(expenses, 2)
+  page_no = request.GET.get('page')
+  page_object = Paginator.get_page(paginator, page_no)
   context = {
-    'expenses': expenses
+    'expenses': expenses,
+    'page_object': page_object
   }
   return render(request, 'expenses/index.html', context)
 
