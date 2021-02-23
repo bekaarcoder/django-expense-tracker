@@ -95,6 +95,12 @@ def edit_expense(request, id):
 
 def delete_expense(request, id):
   expense = Expense.objects.get(pk=id)
-  expense.delete()
-  messages.success(request, 'Expense deleted successfully.')
-  return redirect('expenses:index')
+  context = {
+    'expense': expense
+  }
+  if request.method == 'POST':
+    expense.delete()
+    messages.success(request, 'Expense deleted successfully.')
+    return redirect('expenses:index')
+  
+  return render(request, 'expenses/delete_expense.html', context)
