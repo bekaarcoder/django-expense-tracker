@@ -67,8 +67,8 @@
                   <td>{{income.description}}</td>
                   <td>{{income.source}}</td>
                   <td>
-                    <a href="" class="btn btn-outline-warning btn-sm">Edit</a>
-                    <a href="" class="btn btn-outline-danger btn-sm ms-2">Remove</a>
+                    <a href="{% url 'income:edit-income' income.id %}" class="btn btn-outline-warning btn-sm">Edit</a>
+                    <a href="{% url 'income:delete-income' income.id %}" class="btn btn-outline-danger btn-sm ms-2">Remove</a>
                   </td>
                 </tr>
               {% endfor %}
