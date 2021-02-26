@@ -54,7 +54,7 @@
         <div class="mb-3 row">
           <label for="dateField" class="col-sm-2 col-form-label">Date</label>
           <div class="col-sm-10">
-            <input type="date" name="date" class="form-control" id="dateField" value="{{expense.date}}">
+            <input type="date" name="date" class="form-control" id="dateField" value="{{expense.date | date:'Y-m-d'}}">
           </div>
         </div>
         <div class="mb-3 row">

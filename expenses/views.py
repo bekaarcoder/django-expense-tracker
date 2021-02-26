@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
 from .models import Category, Expense
+from preferences.models import UserPreference
 import datetime
 import json
 
@@ -12,8 +13,8 @@ def search_expenses(request):
     if request.method == "POST":
         keyword = json.loads(request.body).get("searchText")
         expenses = (
-            Expense.objects.filter(amount__starts_with=keyword, owner=request.user)
-            | Expense.objects.filter(date__starts_with=keyword, owner=request.user)
+            Expense.objects.filter(amount__istartswith=keyword, owner=request.user)
+            | Expense.objects.filter(date__startswith=keyword, owner=request.user)
             | Expense.objects.filter(description__icontains=keyword, owner=request.user)
             | Expense.objects.filter(category__icontains=keyword, owner=request.user)
         )
@@ -28,7 +29,8 @@ def index(request):
     paginator = Paginator(expenses, 2)
     page_no = request.GET.get("page")
     page_object = Paginator.get_page(paginator, page_no)
-    context = {"expenses": expenses, "page_object": page_object}
+    currency = UserPreference.objects.get(user=request.user).currency
+    context = {"expenses": expenses, "page_object": page_object, "currency": currency}
     return render(request, "expenses/index.html", context)
 
 
