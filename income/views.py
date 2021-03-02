@@ -1,9 +1,24 @@
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
 from .models import Source, Income
 from django.contrib import messages
 from django.core.paginator import Paginator
 from preferences.models import UserPreference
 import datetime
+import json
+
+def search_income(request):
+    if request.method == "POST":
+        keyword = json.loads(request.body).get("searchText")
+        income = (
+            Income.objects.filter(amount__istartswith=keyword, owner=request.user)
+            | Income.objects.filter(date__startswith=keyword, owner=request.user)
+            | Income.objects.filter(description__icontains=keyword, owner=request.user)
+            | Income.objects.filter(source__icontains=keyword, owner=request.user)
+        )
+        data = income.values()
+
+        return JsonResponse(list(data), safe=False)
 
 
 def index(request):
