@@ -26,7 +26,7 @@ def search_expenses(request):
 @login_required(login_url="/auth/login")
 def index(request):
     expenses = Expense.objects.filter(owner=request.user).order_by("-date")
-    paginator = Paginator(expenses, 2)
+    paginator = Paginator(expenses, 6)
     page_no = request.GET.get("page")
     page_object = Paginator.get_page(paginator, page_no)
     currency = UserPreference.objects.get(user=request.user).currency
@@ -116,3 +116,61 @@ def delete_expense(request, id):
         return redirect("expenses:index")
 
     return render(request, "expenses/delete_expense.html", context)
+
+
+def expense_summary(request):
+    todays_date = datetime.date.today()
+    six_months_before = todays_date - datetime.timedelta(days=30*6)
+    expenses = Expense.objects.filter(date__gte=six_months_before, date__lte=todays_date, owner=request.user)
+    result = {}
+
+    def get_category(expense):
+        return expense.category
+
+    category_list = list(set(map(get_category, expenses)))
+
+    def get_expense_category_amount(category):
+        amount = 0
+        filtered_by_category = expenses.filter(category=category)
+
+        for item in filtered_by_category:
+            amount += item.amount
+
+        return amount
+
+    for expense in expenses:
+        for category in category_list:
+            result[category] = get_expense_category_amount(category)
+
+    return JsonResponse({'expense_summary': result}, safe=False)
+
+
+def get_monthly_expense_summary(request):
+    current_month = datetime.date.today().month
+    result = {}
+    check_month = current_month
+
+    i = 1
+    while i <= 6:
+        if check_month == 0:
+            check_month = 12
+        expenses = Expense.objects.filter(date__month=check_month, owner=request.user)
+        month_expense = 0
+        for expense in expenses:
+            month_expense += expense.amount
+        datetime_obj = datetime.datetime.strptime(str(check_month), '%m')
+        key_month = datetime_obj.strftime('%B')
+        result[key_month] = month_expense
+        check_month -= 1
+        i += 1
+
+
+    # expenses = Expense.objects.filter(date__month=current_month, owner=request.user)
+    # current_month_expense = 0
+    # for expense in expenses:
+    #     current_month_expense += expense.amount
+    return JsonResponse({'expense_summary': result}, safe=False)
+
+
+def view_expense_summary(request):
+    return render(request, 'expenses/expense-summary.html')

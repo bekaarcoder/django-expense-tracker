@@ -24,7 +24,7 @@ def search_income(request):
 def index(request):
     incomes = Income.objects.filter(owner=request.user).order_by('-date')
     currency = UserPreference.objects.get(user=request.user).currency
-    paginator = Paginator(incomes, 2)
+    paginator = Paginator(incomes, 6)
     page_no = request.GET.get('page')
     page_object = Paginator.get_page(paginator, page_no)
 
