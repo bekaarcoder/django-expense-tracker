@@ -1,4 +1,5 @@
 const ctx = document.getElementById("myChart").getContext("2d");
+const ctx2 = document.getElementById("myChart2").getContext("2d");
 
 const loadExpenseChart = (data, labels) => {
   new Chart(ctx, {
@@ -31,6 +32,40 @@ const loadExpenseChart = (data, labels) => {
     options: {
       title: {
         display: true,
+        text: "Expense Summary For Last 6 Months (Category Wise)",
+      },
+    },
+  });
+};
+
+const loadExpenseSummaryChart = (labels, data) => {
+  new Chart(ctx2, {
+    type: "line",
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: "Total Amount",
+          data: data,
+          backgroundColor: "rgba(255, 99, 132, 0.6)",
+          borderColor: "rgba(255, 99, 132, 0.6)",
+          borderWidth: 5,
+          fill: 1,
+        },
+      ],
+    },
+    options: {
+      scales: {
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true,
+            },
+          },
+        ],
+      },
+      title: {
+        display: true,
         text: "Expense Summary For Last 6 Months",
       },
     },
@@ -48,7 +83,12 @@ const getChartData = () => {
 
   fetch("/expenses/monthly-expenses")
     .then((res) => res.json())
-    .then((data) => console.log(data));
+    .then((data) => {
+      let expense_summary_data = Object.entries(data.expense_summary);
+      let chart_labels = expense_summary_data.map((item) => item[1].month);
+      let chart_data = expense_summary_data.map((item) => item[1].amount);
+      loadExpenseSummaryChart(chart_labels, chart_data);
+    });
 };
 
 document.onload = getChartData();

@@ -160,7 +160,11 @@ def get_monthly_expense_summary(request):
             month_expense += expense.amount
         datetime_obj = datetime.datetime.strptime(str(check_month), '%m')
         key_month = datetime_obj.strftime('%B')
-        result[key_month] = month_expense
+        # result[key_month] = month_expense
+        result[i] = {
+                "month": key_month,
+                "amount": month_expense
+            }
         check_month -= 1
         i += 1
 
