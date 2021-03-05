@@ -8,6 +8,8 @@ from preferences.models import UserPreference
 import datetime
 import json
 import csv
+import xlsxwriter
+import xlwt
 
 
 def search_expenses(request):
@@ -183,7 +185,8 @@ def view_expense_summary(request):
 
 def export_csv(request):
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename=Expenses' + str(datetime.datetime.now()) + '.csv'
+    filename = 'Expenses' + str(datetime.datetime.now()) + '.csv'
+    response['Content-Disposition'] = 'attachment; filename=' + filename
 
     writer = csv.writer(response)
     writer.writerow(['Amount', 'Description', 'Category', 'Date'])
@@ -192,5 +195,35 @@ def export_csv(request):
 
     for expense in expenses:
         writer.writerow([expense.amount, expense.description, expense.category, expense.date])
+
+    return response
+
+
+def export_excel(request):
+    response = HttpResponse(content_type='text/ms-excel')
+    filename = 'Expenses' + datetime.datetime.now().strftime('%d%m%Y%H%M%S') + '.xlsx'
+    response['Content-Disposition'] = 'attachment; filename=' + filename
+
+    workbook = xlwt.Workbook(encoding='utf-8')
+    worksheet = workbook.add_sheet('Expense')
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+
+    columns = ["Amount", "Description", "Category", "Date"]
+    for col_num in range(len(columns)):
+        worksheet.write(0, col_num, columns[col_num], font_style)
+
+    expenses = Expense.objects.filter(owner=request.user)
+
+    row = 1
+
+    for expense in expenses:
+        worksheet.write(row, 0, expense.amount)
+        worksheet.write(row, 1, expense.description)
+        worksheet.write(row, 2, expense.category)
+        worksheet.write(row, 3, expense.date)
+        row += 1
+
+    workbook.save(response)
 
     return response
