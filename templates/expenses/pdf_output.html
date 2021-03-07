@@ -14,28 +14,33 @@
       @page {
         size: "A4";
         margin: 2.5cm 1.5cm 3.5cm 1.5cm;
+      }
 
-        @top-center {
-          content: "Expense Summary";
-        }
+      h1 {
+        text-align: center;
+      }
 
-        @bottom-right-corner {
-          content: "Page " counter(page);
-        }
+      th,
+      td {
+        border-bottom: 1px solid #aaa;
+        border-collapse: collapse;
+        padding: 5px;
       }
     </style>
     <title>PDF Output</title>
   </head>
   <body>
+    <h1>Expense Summary</h1>
+    <hr />
     <h2>Expense List</h2>
     <table class="table table-striped">
       <thead>
         <tr>
           <th>#</th>
-          <th>Date</th>
-          <th>Amount</th>
-          <th>Description</th>
-          <th>Category</th>
+          <th style="text-align: left">Date</th>
+          <th style="text-align: right">Amount</th>
+          <th style="text-align: left">Description</th>
+          <th style="text-align: left">Category</th>
         </tr>
       </thead>
       <tbody>
@@ -43,7 +48,7 @@
         <tr>
           <th>{{forloop.counter}}</th>
           <td>{{expense.date}}</td>
-          <td>{{expense.amount}}</td>
+          <td style="text-align: right">{{expense.amount}}</td>
           <td>{{expense.description}}</td>
           <td>{{expense.category}}</td>
         </tr>

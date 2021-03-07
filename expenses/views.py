@@ -10,11 +10,9 @@ import json
 import csv
 import xlsxwriter
 import xlwt
-from django.template.loader import render_to_string
-from weasyprint import HTML
-import tempfile
 from django.db.models import Sum
-import os
+from django.template.loader import get_template
+from xhtml2pdf import pisa
 
 
 def search_expenses(request):
@@ -235,33 +233,25 @@ def export_excel(request):
 
 
 def export_pdf(request):
-    response = HttpResponse(content_type='application/pdf')
-
-    filename = 'Expenses' + datetime.datetime.now().strftime('%d%m%Y%H%M%S') + '.pdf'
-    response['Content-Disposition'] = 'inline; attachment; filename=' + filename
-
-    response['Content-Transfer-Encoding'] = 'binary'
-
+    template_path = 'expenses/pdf_output.html'
     expenses = Expense.objects.filter(owner=request.user)
     sum = expenses.aggregate(Sum('amount'))
-    html_string = render_to_string('expenses/pdf_output.html', {'expenses': expenses, 'total': sum['amount__sum']})
-    html = HTML(string=html_string)
-    result = html.write_pdf()
-    print(type(result))
+    context = {
+        'expenses': expenses,
+        'total': sum['amount__sum']
+    }
+    # Create a Django response object, and specify content_type as pdf
+    response = HttpResponse(content_type='application/pdf')
+    filename = 'Expenses' + datetime.datetime.now().strftime('%d%m%Y%H%M%S') + '.pdf'
+    response['Content-Disposition'] = 'attachment; filename=' + filename
+    # find the template and render it.
+    template = get_template(template_path)
+    html = template.render(context)
 
-    # with tempfile.NamedTemporaryFile(mode='wb', delete=True) as output:
-    #     output.write(result)
-    #     output.flush()
-    #     # temp = output.name
-    #     response.write(output.read())
-    f = tempfile.NamedTemporaryFile(mode='wb', delete=False)
-    path = f.name
-    print(path)
-    f.write(result)
-    f.close()
-    response.write(open(path, 'rb').read())
-
-    os.unlink(path)
-    print(path)
-    
+    # create a pdf
+    pisa_status = pisa.CreatePDF(
+       html, dest=response)
+    # if error then show some funy view
+    if pisa_status.err:
+       return HttpResponse('We had some errors <pre>' + html + '</pre>')
     return response
