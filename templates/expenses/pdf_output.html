@@ -14,6 +14,11 @@
       @page {
         size: "A4";
         margin: 2.5cm 1.5cm 3.5cm 1.5cm;
+
+        @frame footer_frame {           /* Another static Frame */
+            -pdf-frame-content: footer_content;
+            right: 50pt; width: 512pt; top: 772pt; height: 20pt;
+        }
       }
 
       h1 {
@@ -38,9 +43,9 @@
         <tr>
           <th>#</th>
           <th style="text-align: left">Date</th>
-          <th style="text-align: right">Amount</th>
           <th style="text-align: left">Description</th>
           <th style="text-align: left">Category</th>
+          <th style="text-align: right">Amount</th>
         </tr>
       </thead>
       <tbody>
@@ -48,9 +53,9 @@
         <tr>
           <th>{{forloop.counter}}</th>
           <td>{{expense.date}}</td>
-          <td style="text-align: right">{{expense.amount}}</td>
           <td>{{expense.description}}</td>
           <td>{{expense.category}}</td>
+          <td style="text-align: right">{{expense.amount}}</td>
         </tr>
         {% endfor %}
         <tr>
@@ -60,4 +65,7 @@
       </tbody>
     </table>
   </body>
+  <div id="footer_content">
+    page <pdf:pagenumber> of <pdf:pagecount>
+  </div>
 </html>
