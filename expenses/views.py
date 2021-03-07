@@ -10,6 +10,11 @@ import json
 import csv
 import xlsxwriter
 import xlwt
+from django.template.loader import render_to_string
+from weasyprint import HTML
+import tempfile
+from django.db.models import Sum
+import os
 
 
 def search_expenses(request):
@@ -200,7 +205,7 @@ def export_csv(request):
 
 
 def export_excel(request):
-    response = HttpResponse(content_type='text/ms-excel')
+    response = HttpResponse(content_type='application/ms-excel')
     filename = 'Expenses' + datetime.datetime.now().strftime('%d%m%Y%H%M%S') + '.xlsx'
     response['Content-Disposition'] = 'attachment; filename=' + filename
 
@@ -226,4 +231,37 @@ def export_excel(request):
 
     workbook.save(response)
 
+    return response
+
+
+def export_pdf(request):
+    response = HttpResponse(content_type='application/pdf')
+
+    filename = 'Expenses' + datetime.datetime.now().strftime('%d%m%Y%H%M%S') + '.pdf'
+    response['Content-Disposition'] = 'inline; attachment; filename=' + filename
+
+    response['Content-Transfer-Encoding'] = 'binary'
+
+    expenses = Expense.objects.filter(owner=request.user)
+    sum = expenses.aggregate(Sum('amount'))
+    html_string = render_to_string('expenses/pdf_output.html', {'expenses': expenses, 'total': sum['amount__sum']})
+    html = HTML(string=html_string)
+    result = html.write_pdf()
+    print(type(result))
+
+    # with tempfile.NamedTemporaryFile(mode='wb', delete=True) as output:
+    #     output.write(result)
+    #     output.flush()
+    #     # temp = output.name
+    #     response.write(output.read())
+    f = tempfile.NamedTemporaryFile(mode='wb', delete=False)
+    path = f.name
+    print(path)
+    f.write(result)
+    f.close()
+    response.write(open(path, 'rb').read())
+
+    os.unlink(path)
+    print(path)
+    
     return response

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl"
+      crossorigin="anonymous"
+    />
+    <style>
+      @page {
+        size: "A4";
+        margin: 2.5cm 1.5cm 3.5cm 1.5cm;
+
+        @top-center {
+          content: "Expense Summary";
+        }
+
+        @bottom-right-corner {
+          content: "Page " counter(page);
+        }
+      }
+    </style>
+    <title>PDF Output</title>
+  </head>
+  <body>
+    <h2>Expense List</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Date</th>
+          <th>Amount</th>
+          <th>Description</th>
+          <th>Category</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for expense in expenses %}
+        <tr>
+          <th>{{forloop.counter}}</th>
+          <td>{{expense.date}}</td>
+          <td>{{expense.amount}}</td>
+          <td>{{expense.description}}</td>
+          <td>{{expense.category}}</td>
+        </tr>
+        {% endfor %}
+        <tr>
+          <th colspan="4" style="text-align: right">Total</th>
+          <td>{{total}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>
