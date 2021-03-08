@@ -1,3 +1,4 @@
+import django_heroku
 import environ
 from pathlib import Path
 from django.contrib import messages
@@ -124,3 +125,6 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+
+django_heroku.settings(locals())
