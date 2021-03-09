@@ -35,7 +35,9 @@ def index(request):
     paginator = Paginator(expenses, 6)
     page_no = request.GET.get("page")
     page_object = Paginator.get_page(paginator, page_no)
-    currency = UserPreference.objects.get(user=request.user).currency
+    currency = None
+    if UserPreference.objects.filter(user=request.user).exists():
+        currency = UserPreference.objects.get(user=request.user).currency
     context = {"expenses": expenses, "page_object": page_object, "currency": currency}
     return render(request, "expenses/index.html", context)
 
