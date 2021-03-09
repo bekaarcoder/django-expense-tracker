@@ -34,7 +34,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'expenses',
     'preferences',
-    'income'
+    'income',
+    'home'
 ]
 
 MIDDLEWARE = [
@@ -129,7 +130,11 @@ STATIC_ROOT = [BASE_DIR / 'static_root']
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+# EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_HOST = 'smtp.mailtrap.io'
+EMAIL_HOST_USER = '1d614e402cdb79'
+EMAIL_HOST_PASSWORD = '11ad79315473c0'
+EMAIL_PORT = '2525'
 
 
 django_heroku.settings(locals())
