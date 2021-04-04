@@ -92,6 +92,9 @@
         </div>
       {% endif %}
     </div>
+    <div class="col-md-12">
+      <a href="{% url 'income:export-pdf' %}" class="btn btn-primary btn-sm">Export PDF</a>
+    </div>
   </div>
   <script src="{% static 'js/search-income.js' %}"></script>
 {% endblock content %}

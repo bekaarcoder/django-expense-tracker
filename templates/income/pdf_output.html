@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl"
+      crossorigin="anonymous"
+    />
+    <style>
+      @page {
+        size: "A4";
+        margin: 2.5cm 1.5cm 3.5cm 1.5cm;
+
+        @frame footer_frame {           /* Another static Frame */
+            -pdf-frame-content: footer_content;
+            right: 50pt; width: 512pt; top: 772pt; height: 20pt;
+        }
+      }
+
+      h1 {
+        text-align: center;
+      }
+
+      th,
+      td {
+        border-bottom: 1px solid #aaa;
+        border-collapse: collapse;
+        padding: 5px;
+      }
+    </style>
+    <title>PDF Output</title>
+  </head>
+  <body>
+    <h1>Income Summary</h1>
+    <hr />
+    <h2>Income List</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th style="text-align: left">Date</th>
+          <th style="text-align: left">Description</th>
+          <th style="text-align: left">Source</th>
+          <th style="text-align: right">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for income in incomes %}
+        <tr>
+          <th>{{forloop.counter}}</th>
+          <td>{{income.date}}</td>
+          <td>{{income.description}}</td>
+          <td>{{income.source}}</td>
+          <td style="text-align: right">{{income.amount}}</td>
+        </tr>
+        {% endfor %}
+        <tr>
+          <th colspan="4" style="text-align: right">Total</th>
+          <td>{{total}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+  <div id="footer_content">
+    page <pdf:pagenumber> of <pdf:pagecount>
+  </div>
+</html>
