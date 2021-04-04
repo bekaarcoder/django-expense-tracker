@@ -6,19 +6,19 @@
   <div class="position-sticky pt-3">
     <ul class="nav flex-column">
       <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="#">
+        <a class="nav-link" aria-current="page" href="#">
           <span data-feather="home"></span>
           Dashboard
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'expenses:index' %}">
+        <a class="nav-link {% if request.path == '/expenses/' %}active{% endif %}" href="{% url 'expenses:index' %}">
           <span data-feather="file"></span>
           Expenses
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'income:index' %}">
+        <a class="nav-link {% if request.path == '/income/' %}active{% endif %}" href="{% url 'income:index' %}">
           <span data-feather="shopping-cart"></span>
           Income
         </a>
@@ -35,13 +35,13 @@
     </h6>
     <ul class="nav flex-column mb-2">
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'expenses:view-expense-summary' %}">
+        <a class="nav-link {% if 'view-expense-summary' in request.path %}active{% endif %}" href="{% url 'expenses:view-expense-summary' %}">
           <span data-feather="file-text"></span>
           Expenses Summary
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'income:view-income-summary' %}">
+        <a class="nav-link {% if 'view-income-summary' in request.path %}active{% endif %}" href="{% url 'income:view-income-summary' %}">
           <span data-feather="file-text"></span>
           Income Summary
         </a>
@@ -58,7 +58,7 @@
     </h6>
     <ul class="nav flex-column mb-2">
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'preferences:preferences' %}">
+        <a class="nav-link {% if 'preferences' in request.path %}active{% endif %}" href="{% url 'preferences:preferences' %}">
           <span data-feather="file-text"></span>
           General
         </a>
